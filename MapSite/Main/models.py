@@ -12,7 +12,7 @@ class Markers(models.Model):
     lat = models.DecimalField(decimal_places=17, max_digits=20)
     lng = models.DecimalField(decimal_places=17, max_digits=20)
     address = models.TextField()
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner")
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner", default=1) 
     
     def __str__(self):
         return f'Владелец: {self.user.username}. Адрес: {self.address}'

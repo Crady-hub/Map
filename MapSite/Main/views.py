@@ -1,6 +1,5 @@
-from Main.models import Markers
-from django.views import generic
-from rest_framework import generics, permissions, serializers
+import requests
+from Main.models import Markers, User
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from rest_framework.views import APIView
@@ -12,12 +11,37 @@ from .serializer import CreateMarker
 #     template_name = 'main.html'
 
 
-class CreateMarkerView(APIView):
-    def post(self, request):
-        marker = CreateMarker(data=request.data)
-        if marker.is_valid():
-            print(marker)
-            marker.save()
+# class CreateMarkerView(APIView):
+#     def post(self, request):
+#         marker = CreateMarker().create(request.data)
+#         if marker.is_valid():
+#             marker.save()
+#         return Response(status=201)
+        
+class CreateGetMarkerView(APIView):
+    serializer_class = CreateMarker
 
-        return Response(status=201)
-    
+    def get_queryset(self):
+        marker = Markers.objects.all()
+        return marker
+        
+    def post(self, request, *args, **kwargs):
+        marker_data = request.data
+        print(marker_data)
+        url = f"https://maps.googleapis.com/maps/api/geocode/json?latlng={marker_data['lat']}, {marker_data['lng']}&key=AIzaSyAmIBHpjazvTWnEfyZ7NHcB1TC92eBBMnU&language=ru"
+        response = requests.get(url).json()
+        new_address = response['results'][0]['formatted_address']
+
+        new_marker = Markers.objects.create(lng=marker_data['lng'], lat=marker_data['lat'], address = new_address, owner=User.objects.get(id = marker_data['owner']))
+
+        new_marker.save()
+
+        serializers = CreateMarker(new_marker)
+
+        return Response(status = 201, data = serializers.data)
+
+    def get(self, request, *args, **kwargs):
+        markers = self.get_queryset()
+        serializers = CreateMarker(markers, many=True)
+
+        return Response(serializers.data)
