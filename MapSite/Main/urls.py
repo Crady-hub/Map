@@ -1,6 +1,8 @@
 from django.urls import path
-from . import views
+from .views import  CreateMarkerView
+from Main import views 
 
 urlpatterns = [
-    path('', views.main_window, name='main-page')
+    # path('', MainWindow.as_view(), name='main-page'),
+    path('api/v1/marker/', CreateMarkerView.as_view())
 ]
