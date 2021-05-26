@@ -1,10 +1,12 @@
 import requests
+from rest_framework import permissions 
 from Main.models import Markers, User
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializer import CreateMarker
+from django.db.utils import IntegrityError
 
 
 # class MainWindow(TemplateView):
@@ -20,6 +22,7 @@ from .serializer import CreateMarker
         
 class CreateGetMarkerView(APIView):
     serializer_class = CreateMarker
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         marker = Markers.objects.all()
@@ -27,14 +30,15 @@ class CreateGetMarkerView(APIView):
         
     def post(self, request, *args, **kwargs):
         marker_data = request.data
-        print(marker_data)
         url = f"https://maps.googleapis.com/maps/api/geocode/json?latlng={marker_data['lat']}, {marker_data['lng']}&key=AIzaSyAmIBHpjazvTWnEfyZ7NHcB1TC92eBBMnU&language=ru"
         response = requests.get(url).json()
         new_address = response['results'][0]['formatted_address']
-
-        new_marker = Markers.objects.create(lng=marker_data['lng'], lat=marker_data['lat'], address = new_address, owner=User.objects.get(id = marker_data['owner']))
-
-        new_marker.save()
+        
+        try:
+            new_marker = Markers.objects.create(lng=marker_data['lng'], lat=marker_data['lat'], address = new_address, owner=User.objects.get(id = request.user.id))
+            new_marker.save()
+        except IntegrityError:
+            return Response(status = 418, data={"Error": "Dublicate"})
 
         serializers = CreateMarker(new_marker)
 

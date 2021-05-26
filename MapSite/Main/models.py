@@ -20,6 +20,7 @@ class Markers(models.Model):
     class Meta:
         verbose_name = 'Marker'
         verbose_name_plural = 'Markers'
+        unique_together = ('lat', 'lng')
     
 
 class Active_rent(models.Model): 
