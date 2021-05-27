@@ -9,8 +9,8 @@ class Profile(models.Model):
     
 class Markers(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
-    lat = models.DecimalField(decimal_places=17, max_digits=20)
-    lng = models.DecimalField(decimal_places=17, max_digits=20)
+    lat = models.DecimalField(decimal_places=15, max_digits=18)
+    lng = models.DecimalField(decimal_places=15, max_digits=18)
     address = models.TextField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner", default=1) 
     
