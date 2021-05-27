@@ -47,5 +47,4 @@ class CreateGetMarkerView(APIView):
     def get(self, request, *args, **kwargs):
         markers = self.get_queryset()
         serializers = CreateMarker(markers, many=True)
-
         return Response(serializers.data)

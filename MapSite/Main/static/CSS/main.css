@@ -1,11 +1,40 @@
-/* #map {
+html,
+body {
     height: 100%;
-  }
-  
-  
-  html,
-  body {
+}
+
+.contain {
+    display: flex;
     height: 100%;
-    margin: 0;
-    padding: 0;
-  } */
+    width: 100%;
+    flex-direction: row;
+    background-color: #fcf9f9;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: none;
+    align-items: center;
+}
+
+.map {
+    min-width: 66%;
+}
+
+.login {
+    height: 3em;
+    width: 15em;
+    font-size: 1.2em;
+    border-radius: 5px;
+    border-width: 0px;
+    margin-top: 10%;
+}
+
+.title {
+    font-family: Brush Script MT, Brush Script Std, cursive;
+    font-size: 3em;
+    margin-bottom: 50%;
+    margin-top: 10%;
+}
