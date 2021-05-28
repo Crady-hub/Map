@@ -3,8 +3,10 @@ from django.conf import settings
 from django.contrib.auth.models import User
 
 class Profile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="user_data")
     seller_or_buyer = models.BooleanField()
+    fio = models.CharField(max_length=300, null=True)
+    phone_number = models.IntegerField()
 
     
 class Markers(models.Model):
@@ -13,9 +15,6 @@ class Markers(models.Model):
     lng = models.DecimalField(decimal_places=15, max_digits=18)
     address = models.TextField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner", default=1) 
-    
-    def __str__(self):
-        return f'Владелец: {self.user.username}. Адрес: {self.address}'
 
     class Meta:
         verbose_name = 'Marker'
@@ -29,8 +28,6 @@ class Active_rent(models.Model):
     dto = models.DateField()
     buyer_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return f'{self.markers.user.username} -> {self.user.username}'
     
     class Meta:
         verbose_name = 'Rent'

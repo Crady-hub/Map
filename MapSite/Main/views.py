@@ -1,11 +1,11 @@
 import requests
-from rest_framework import permissions 
+from rest_framework import permissions
 from Main.models import Markers, User
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import CreateMarker
+from .serializer import CreateMarker, DetailMarkerInfoSerializer
 from django.db.utils import IntegrityError
 
 
@@ -48,3 +48,11 @@ class CreateGetMarkerView(APIView):
         markers = self.get_queryset()
         serializers = CreateMarker(markers, many=True)
         return Response(serializers.data)
+
+
+class DetailMarkerInfoView(APIView):
+
+    def get(self, request, pk):
+        marker = Markers.objects.get(id=pk)
+        serializer = DetailMarkerInfoSerializer(marker)
+        return Response(serializer.data)
