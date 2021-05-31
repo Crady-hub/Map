@@ -34,11 +34,16 @@ class CreateGetMarkerView(APIView):
         response = requests.get(url).json()
         new_address = response['results'][0]['formatted_address']
         
-        try:
-            new_marker = Markers.objects.create(lng=marker_data['lng'], lat=marker_data['lat'], address = new_address, owner=User.objects.get(id = request.user.id))
-            new_marker.save()
-        except IntegrityError:
-            return Response(status = 418, data={"Error": "Dublicate"})
+        # try:
+        new_marker = Markers.objects.create(lng=marker_data['lng'],
+         lat=marker_data['lat'],
+         address = new_address,
+         owner=User.objects.get(id = request.user.id),
+         price=marker_data['price'],
+         type=marker_data['type'])
+        new_marker.save()
+        # except IntegrityError:
+        #     return Response(status = 418, data={"Error": "Dublicate"})
 
         serializers = CreateMarker(new_marker)
 
