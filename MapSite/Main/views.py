@@ -1,13 +1,11 @@
 import requests
-from rest_framework import permissions
-from Main.models import Markers, User
-from django.shortcuts import render
-from django.views.generic import TemplateView
+from rest_framework import permissions, serializers
+from rest_framework import response
+from rest_framework.utils import serializer_helpers
+from .models import Markers, User, Profile
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import CreateMarker, DetailMarkerInfoSerializer
-from django.db.utils import IntegrityError
-
+from .serializer import CreateMarker, DetailMarkerInfoSerializer, ProfileDataSerializer, GetProfileDataSerializer
 
 # class MainWindow(TemplateView):
 #     template_name = 'main.html'
@@ -36,11 +34,12 @@ class CreateGetMarkerView(APIView):
         
         # try:
         new_marker = Markers.objects.create(lng=marker_data['lng'],
-         lat=marker_data['lat'],
-         address = new_address,
-         owner=User.objects.get(id = request.user.id),
-         price=marker_data['price'],
-         type=marker_data['type'])
+                                            lat=marker_data['lat'],
+                                            address = new_address,
+                                            owner=User.objects.get(id = request.user.id),
+                                            price=marker_data['price'],
+                                            type=marker_data['type']
+        )
         new_marker.save()
         # except IntegrityError:
         #     return Response(status = 418, data={"Error": "Dublicate"})
@@ -60,4 +59,38 @@ class DetailMarkerInfoView(APIView):
     def get(self, request, pk):
         marker = Markers.objects.get(id=pk)
         serializer = DetailMarkerInfoSerializer(marker)
+        return Response(serializer.data)
+
+
+class GetProfileInfoView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, pk):
+        profile_data = Profile.objects.get(user=pk)
+        serializer = GetProfileDataSerializer(profile_data)
+        return Response(serializer.data)
+
+
+class PostProfileInfoView(APIView):
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        profile_data = request.data
+        if Profile.objects.get(user = User.objects.get(id = request.user.id)):
+            new_profile = Profile.objects.get(user = User.objects.get(id = request.user.id))
+            new_profile.fio = profile_data['fio']
+            new_profile.phone_number = profile_data['phone_number']
+            new_profile.save(update_fields=['fio','phone_number'])
+        else:
+            new_profile = Profile.objects.create(fio=profile_data['fio'], 
+                                            phone_number=profile_data['phone_number'], 
+                                            user=User.objects.get(id = request.user.id))
+            new_profile.save()
+
+        serializers = ProfileDataSerializer(Profile.objects.get(user = User.objects.get(id = request.user.id)))
+        return Response(status=201, data=serializers.data)
+
+    def get(self, request):
+        serializer = ProfileDataSerializer(Profile.objects.get(user = User.objects.get(id = request.user.id)))
         return Response(serializer.data)

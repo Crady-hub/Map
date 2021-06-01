@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="user_data")
     fio = models.CharField(max_length=300, null=True)
-    phone_number = models.IntegerField()
+    phone_number = models.CharField(max_length=15)
 
     
 class Markers(models.Model):

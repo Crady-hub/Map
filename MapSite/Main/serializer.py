@@ -1,9 +1,7 @@
+
 from django.db.models import fields
-from django.utils.functional import partition
-import requests
-from django.contrib.auth import get_user
 from rest_framework import serializers
-from .models import Markers, User
+from .models import Markers, Profile, Active_rent
 
 # class CreateMarker(serializers.ModelSerializer):
 #     class Meta:
@@ -38,15 +36,25 @@ class CreateMarker(serializers.ModelSerializer):
 #         model = User
 #         fields = ('username',)
 
+
+class GetProfileDataSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields =('fio', 'phone_number',)
+
 class DetailMarkerInfoSerializer(serializers.ModelSerializer):
-
-    owner = serializers.SlugRelatedField(slug_field="username", read_only=True)
-
 
     class Meta:
         model = Markers
         exclude = ('created_date',)
 
+
+class ProfileDataSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        exclude = ('id', 'user',)
     
 
 
