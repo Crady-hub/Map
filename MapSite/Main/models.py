@@ -16,7 +16,7 @@ class Markers(models.Model):
     address = models.TextField()
     price = models.IntegerField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner", default=1) 
-
+ 
     class Meta:
         verbose_name = 'Marker'
         verbose_name_plural = 'Markers'
