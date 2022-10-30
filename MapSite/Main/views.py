@@ -1,23 +1,19 @@
 import requests
-from rest_framework import permissions, serializers
-from rest_framework import response
-from rest_framework.utils import serializer_helpers
-from .models import Markers, User, Profile
+from django.shortcuts import render
+from rest_framework import permissions
+from .models import Active_rent, Markers, User, Profile
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializer import CreateMarker, DetailMarkerInfoSerializer, ProfileDataSerializer, GetProfileDataSerializer
-
-# class MainWindow(TemplateView):
-#     template_name = 'main.html'
+from django.shortcuts import get_object_or_404
 
 
-# class CreateMarkerView(APIView):
-#     def post(self, request):
-#         marker = CreateMarker().create(request.data)
-#         if marker.is_valid():
-#             marker.save()
-#         return Response(status=201)
-        
+def auth_view(request):
+    return render(request, 'auth.html')
+
+def main_view(request):
+    return render(request, 'main.html')
+
 class CreateGetMarkerView(APIView):
     serializer_class = CreateMarker
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
@@ -31,8 +27,6 @@ class CreateGetMarkerView(APIView):
         url = f"https://maps.googleapis.com/maps/api/geocode/json?latlng={marker_data['lat']}, {marker_data['lng']}&key=AIzaSyAmIBHpjazvTWnEfyZ7NHcB1TC92eBBMnU&language=ru"
         response = requests.get(url).json()
         new_address = response['results'][0]['formatted_address']
-        
-        # try:
         new_marker = Markers.objects.create(lng=marker_data['lng'],
                                             lat=marker_data['lat'],
                                             address = new_address,
@@ -41,9 +35,6 @@ class CreateGetMarkerView(APIView):
                                             type=marker_data['type']
         )
         new_marker.save()
-        # except IntegrityError:
-        #     return Response(status = 418, data={"Error": "Dublicate"})
-
         serializers = CreateMarker(new_marker)
 
         return Response(status = 201, data = serializers.data)
@@ -56,13 +47,32 @@ class CreateGetMarkerView(APIView):
 
 class DetailMarkerInfoView(APIView):
 
+    # permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request, pk):
         marker = Markers.objects.get(id=pk)
         serializer = DetailMarkerInfoSerializer(marker)
         return Response(serializer.data)
+        
+
+class PostNewRentView(APIView):
+
+    def post(self, request):
+        rent_data = request.data
+
+        new_rent = Active_rent.objects.create(
+            marker_id=Markers.objects.get(id=rent_data['marker_id']),
+            rent_date=rent_data['rent_date'],
+            buyer_id=User.objects.get(id=request.user.id)
+        )
+        new_rent.save()
+
+        return Response(status=201)
+
 
 
 class GetProfileInfoView(APIView):
+
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, pk):
@@ -77,16 +87,12 @@ class PostProfileInfoView(APIView):
 
     def post(self, request):
         profile_data = request.data
-        if Profile.objects.get(user = User.objects.get(id = request.user.id)):
-            new_profile = Profile.objects.get(user = User.objects.get(id = request.user.id))
-            new_profile.fio = profile_data['fio']
-            new_profile.phone_number = profile_data['phone_number']
-            new_profile.save(update_fields=['fio','phone_number'])
-        else:
-            new_profile = Profile.objects.create(fio=profile_data['fio'], 
-                                            phone_number=profile_data['phone_number'], 
-                                            user=User.objects.get(id = request.user.id))
-            new_profile.save()
+        
+        new_data, _ = Profile.objects.update_or_create(
+            user = User.objects.get(id = request.user.id),
+            defaults={'fio': profile_data['fio'], 'phone_number':profile_data['phone_number']}
+        )
+        new_data.save()
 
         serializers = ProfileDataSerializer(Profile.objects.get(user = User.objects.get(id = request.user.id)))
         return Response(status=201, data=serializers.data)

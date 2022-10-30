@@ -1,0 +1,232 @@
+html,
+body {
+    height: 100%;
+}
+
+.contain {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: row;
+    background-color: #fcf9f9;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: none;
+    align-items: center;
+}
+
+.map {
+    min-width: 66%;
+}
+
+.login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3em;
+    width: 15em;
+    font-size: 1.2em;
+    border-radius: 5px;
+    border-width: 0px;
+    margin-top: 10%;
+}
+
+.title {
+    font-family: Brush Script MT, Brush Script Std, cursive;
+    font-size: 3em;
+    margin-bottom: 50%;
+    margin-top: 10%;
+}
+
+.calendar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-bg-singin {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+}
+
+.popup-singin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: #ffffff;
+    padding: 2em;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+}
+
+.popup-singin form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-singin form input {
+    margin-bottom: 5%;
+    height: 2em;
+    width: 13em;
+    font-size: 1em;
+    padding: 0.1em 0.1em 0.3em 0.1em;
+    border: 0.1em solid #cacaca;
+    color: #535353;
+    border-radius: 5px;
+}
+
+.popup-singin form input:focus {
+    outline: none;
+    border: 0.1em solid #504f4f;
+}
+
+.popup-singin form input[type="button"] {
+    margin-top: 5%;
+    height: 2em;
+    width: 11em;
+    font-size: 1em;
+    border-radius: 5px;
+    border-width: 0px;
+    color: #ffffff;
+    background-color: #6c757d;
+}
+
+.popup-singin form input[type="button"]:hover {
+    background-color: #565e64;
+}
+
+.popup-singin form legend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    font-family: Brush Script MT, Brush Script Std, cursive;
+}
+
+.close-popup-singin {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    height: 1em;
+    width: 1em;
+    cursor: pointer;
+}
+
+.popup-bg-singup {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+}
+
+.popup-singup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: #ffffff;
+    padding: 2em;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+}
+
+.popup-singup form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-singup form input {
+    margin-bottom: 5%;
+    height: 2em;
+    width: 13em;
+    font-size: 1em;
+    padding: 0.1em 0.1em 0.3em 0.1em;
+    border: 0.1em solid #cacaca;
+    color: #535353;
+    border-radius: 5px;
+}
+
+.popup-singup form input:focus {
+    outline: none;
+    border: 0.1em solid #504f4f;
+}
+
+.popup-singup form input[type="button"] {
+    margin-top: 5%;
+    height: 2em;
+    width: 11em;
+    font-size: 1em;
+    border-radius: 5px;
+    border-width: 0px;
+    color: #ffffff;
+    background-color: #6c757d;
+}
+
+.popup-singup form input[type="button"]:hover {
+    background-color: #565e64;
+}
+
+.popup-singup form legend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    font-family: Brush Script MT, Brush Script Std, cursive;
+}
+
+.close-popup-singup {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    height: 1em;
+    width: 1em;
+    cursor: pointer;
+}
+
+.popup-bg-success {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+}
+
+.popup-success {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: #ffffff;
+    padding: 2em;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+}
+
+.success-button {
+    font-size: 1em;
+    border-radius: 5px;
+    border-width: 0px;
+    padding: 0.5em;
+    margin-top: 10%;
+}
